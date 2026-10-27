@@ -1,0 +1,972 @@
+<title>Dahlia Feeling App</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap">
+
+<style>
+/* ── TOKENS ─────────────────────────────────────────── */
+/* Layout: dark forest hero / warm ivory content / sage accents */
+:root {
+  --bg:          #f5f1e8;
+  --bg-alt:      #ebe6da;
+  --surface:     #faf8f3;
+  --fg:          #1b211a;
+  --fg-soft:     #596054;
+  --fg-muted:    #8a9285;
+  --hero-bg:     #131a13;
+  --hero-fg:     #edeae0;
+  --hero-mid:    #6a8a70;
+  --hero-dim:    #3a4a3c;
+  --accent:      #3a6444;
+  --accent-hi:   #4d8860;
+  --accent-warm: #b6703c;
+  --accent-tint: #e8f0e9;
+  --border:      #d6d0c3;
+  --card-bg:     #ffffff;
+  --font-d: 'Cormorant Garamond', Georgia, serif;
+  --font-b: 'DM Sans', system-ui, sans-serif;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:          #13180f;
+    --bg-alt:      #191e14;
+    --surface:     #1e2419;
+    --fg:          #e5e0d4;
+    --fg-soft:     #9aa292;
+    --fg-muted:    #626d5a;
+    --hero-bg:     #0b0f0b;
+    --hero-fg:     #e5e0d4;
+    --hero-mid:    #6a8a70;
+    --hero-dim:    #2a3a2c;
+    --accent:      #56906a;
+    --accent-hi:   #6aaa80;
+    --accent-warm: #c87e4a;
+    --accent-tint: #1a2e1e;
+    --border:      #2c3228;
+    --card-bg:     #1e2419;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:          #13180f;
+  --bg-alt:      #191e14;
+  --surface:     #1e2419;
+  --fg:          #e5e0d4;
+  --fg-soft:     #9aa292;
+  --fg-muted:    #626d5a;
+  --hero-bg:     #0b0f0b;
+  --hero-fg:     #e5e0d4;
+  --hero-mid:    #6a8a70;
+  --hero-dim:    #2a3a2c;
+  --accent:      #56906a;
+  --accent-hi:   #6aaa80;
+  --accent-warm: #c87e4a;
+  --accent-tint: #1a2e1e;
+  --border:      #2c3228;
+  --card-bg:     #1e2419;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-b); background: var(--bg); color: var(--fg); line-height: 1.6; font-size: 16px; }
+
+.inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-left: max(24px, env(safe-area-inset-left, 0px));
+  padding-right: max(24px, env(safe-area-inset-right, 0px));
+}
+
+/* ── NAV ─────────────────────────────────────────────── */
+nav {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 200;
+  background: var(--hero-bg);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 18px;
+}
+.logo {
+  font-family: var(--font-d);
+  font-size: 1.55rem;
+  font-weight: 400;
+  color: var(--hero-fg);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+.logo-sub {
+  font-style: italic;
+  color: var(--hero-mid);
+  margin-left: 4px;
+  font-size: 1.1rem;
+}
+.nav-links {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--hero-mid);
+  text-decoration: none;
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--hero-fg); }
+.nav-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 40px;
+  font-family: var(--font-b);
+  font-size: 0.86rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.nav-btn:hover { background: var(--accent-hi); }
+
+/* ── HERO ─────────────────────────────────────────────── */
+.hero {
+  background: var(--hero-bg);
+  padding-block: 80px 90px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 55% 65% at 72% 45%, rgba(58,100,68,0.2) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 50% at 10% 80%, rgba(182,112,60,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--hero-mid);
+  margin-bottom: 22px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 28px; height: 1px;
+  background: var(--hero-dim);
+}
+.hero h1 {
+  font-family: var(--font-d);
+  font-size: clamp(2.8rem, 4.5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--hero-fg);
+  margin-bottom: 22px;
+  text-wrap: balance;
+  letter-spacing: -0.01em;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--hero-mid);
+}
+.hero-desc {
+  font-size: 1.05rem;
+  color: var(--hero-mid);
+  line-height: 1.7;
+  font-weight: 300;
+  max-width: 380px;
+  margin-bottom: 36px;
+}
+.hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.btn-warm {
+  background: var(--accent-warm);
+  color: #fff;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 40px;
+  font-family: var(--font-b);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-warm:hover { background: #a4612e; transform: translateY(-1px); }
+.btn-ghost {
+  background: transparent;
+  color: var(--hero-mid);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 13px 24px;
+  border-radius: 40px;
+  font-family: var(--font-b);
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-ghost:hover { border-color: var(--hero-mid); color: var(--hero-fg); }
+
+/* ── QUIZ WIDGET ──────────────────────────────────────── */
+.quiz-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 22px;
+  padding: 30px;
+  position: relative;
+  z-index: 1;
+}
+.quiz-step { display: none; }
+.quiz-step.qs-active { display: block; }
+.quiz-q {
+  font-family: var(--font-d);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--hero-fg);
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+.pills { display: flex; flex-wrap: wrap; gap: 9px; }
+.pill {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--hero-fg);
+  padding: 9px 18px;
+  border-radius: 40px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: var(--font-b);
+  font-weight: 300;
+}
+.pill:hover {
+  background: rgba(58,100,68,0.35);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.pill.active { background: var(--accent); border-color: var(--accent); }
+
+.quiz-hint {
+  font-size: 0.78rem;
+  color: var(--hero-dim);
+  margin-top: 16px;
+  letter-spacing: 0.04em;
+}
+.quiz-sep {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin: 18px 0;
+}
+.results-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hero-dim);
+  margin-bottom: 12px;
+}
+.mini-results { display: flex; flex-direction: column; gap: 9px; }
+.mini-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 11px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.mini-card:hover { background: rgba(255,255,255,0.07); }
+.mini-icon {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.mini-info { flex: 1; min-width: 0; }
+.mini-name { font-size: 0.88rem; color: var(--hero-fg); font-weight: 500; }
+.mini-type { font-size: 0.76rem; color: var(--hero-dim); }
+.mini-badge {
+  background: rgba(58,100,68,0.3);
+  color: #7dd494;
+  font-size: 0.7rem;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.quiz-back {
+  background: none;
+  border: none;
+  color: var(--hero-dim);
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: var(--font-b);
+  margin-top: 14px;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.quiz-back:hover { color: var(--hero-mid); }
+.quiz-selected-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(58,100,68,0.25);
+  border: 1px solid rgba(58,100,68,0.4);
+  color: #7dd494;
+  font-size: 0.8rem;
+  padding: 4px 12px 4px 8px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+.quiz-selected-tag::before { content: '✓'; }
+
+/* ── STRIPE ───────────────────────────────────────────── */
+.stripe {
+  background: var(--bg-alt);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding-block: 18px;
+}
+.stripe-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 44px;
+  flex-wrap: wrap;
+}
+.stripe-item {
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── HOW IT WORKS ─────────────────────────────────────── */
+.how { padding-block: 88px; }
+.eyebrow {
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+.section-h {
+  font-family: var(--font-d);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 300;
+  line-height: 1.15;
+  margin-bottom: 14px;
+  text-wrap: balance;
+}
+.section-desc {
+  font-size: 1.02rem;
+  color: var(--fg-soft);
+  font-weight: 300;
+  line-height: 1.7;
+  max-width: 500px;
+  margin-bottom: 52px;
+}
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.step {
+  padding: 28px 26px 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--surface);
+  position: relative;
+}
+.step-n {
+  font-family: var(--font-d);
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: var(--border);
+  line-height: 1;
+  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+}
+.step-icon-wrap {
+  width: 44px; height: 44px;
+  background: var(--accent-tint);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 18px;
+}
+.step h3 {
+  font-family: var(--font-d);
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  letter-spacing: 0.01em;
+}
+.step p {
+  font-size: 0.92rem;
+  color: var(--fg-soft);
+  line-height: 1.68;
+  font-weight: 300;
+}
+.step-arrow {
+  position: absolute;
+  top: 50%; right: -18px;
+  transform: translateY(-50%);
+  color: var(--border);
+  font-size: 1.1rem;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── PRODUCTS ─────────────────────────────────────────── */
+.products { background: var(--bg-alt); padding-block: 88px; }
+.prod-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.see-all {
+  font-size: 0.88rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.see-all:hover { text-decoration: underline; }
+.prod-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.prod-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.prod-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.09); }
+.prod-thumb {
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.4rem;
+  position: relative;
+}
+.prod-match {
+  position: absolute;
+  top: 14px; left: 14px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.prod-body { padding: 18px 20px 22px; }
+.prod-name {
+  font-family: var(--font-d);
+  font-size: 1.22rem;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 4px;
+  letter-spacing: 0.01em;
+}
+.prod-type {
+  font-size: 0.76rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.chip {
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-size: 0.76rem;
+  padding: 3px 11px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+.prod-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.prod-price { font-size: 1.08rem; font-weight: 500; }
+.btn-add {
+  background: var(--fg);
+  color: var(--bg);
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--font-b);
+  transition: opacity 0.2s;
+}
+.btn-add:hover { opacity: 0.75; }
+
+/* ── WHY IT WORKS ─────────────────────────────────────── */
+.science { padding-block: 88px; }
+.sci-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+.sci-vis {
+  background: var(--hero-bg);
+  border-radius: 20px;
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.sci-vis::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 15% 85%, rgba(58,100,68,0.22) 0%, transparent 55%);
+}
+.sci-title-vis {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hero-dim);
+  margin-bottom: 22px;
+  position: relative;
+}
+.sci-rows { display: flex; flex-direction: column; gap: 12px; position: relative; }
+.sci-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.sci-lbl {
+  font-size: 0.76rem;
+  color: rgba(180,195,183,0.65);
+  letter-spacing: 0.07em;
+  flex: 0 0 80px;
+  text-transform: uppercase;
+}
+.sci-bar-track {
+  flex: 1;
+  height: 5px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sci-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, #7acd90 100%);
+}
+.sci-pct {
+  font-size: 0.78rem;
+  color: rgba(180,195,183,0.7);
+  flex: 0 0 36px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.sci-points { display: flex; flex-direction: column; gap: 24px; margin-top: 36px; }
+.sci-pt { display: flex; gap: 16px; align-items: flex-start; }
+.sci-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; flex-shrink: 0; margin-top: 9px; }
+.sci-pt h4 { font-size: 1rem; font-weight: 500; margin-bottom: 5px; font-family: var(--font-b); }
+.sci-pt p { font-size: 0.9rem; color: var(--fg-soft); line-height: 1.62; font-weight: 300; }
+
+/* ── CTA ──────────────────────────────────────────────── */
+.cta {
+  background: var(--hero-bg);
+  padding-block: 88px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(58,100,68,0.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cta h2 {
+  font-family: var(--font-d);
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 300;
+  color: var(--hero-fg);
+  line-height: 1.12;
+  text-wrap: balance;
+  margin-bottom: 18px;
+  position: relative;
+}
+.cta h2 em { font-style: italic; color: var(--hero-mid); }
+.cta p {
+  color: var(--hero-mid);
+  font-size: 1.05rem;
+  font-weight: 300;
+  margin-bottom: 36px;
+  position: relative;
+}
+.cta .btn-warm { position: relative; font-size: 1.05rem; padding: 15px 36px; }
+
+/* ── FOOTER ───────────────────────────────────────────── */
+footer {
+  background: var(--hero-bg);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-block: 36px;
+}
+footer .inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.foot-copy { font-size: 0.82rem; color: var(--hero-dim); }
+.foot-links { display: flex; gap: 24px; }
+.foot-links a {
+  font-size: 0.82rem;
+  color: var(--hero-dim);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.foot-links a:hover { color: var(--hero-mid); }
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media (max-width: 760px) {
+  .hero-grid, .sci-grid { grid-template-columns: 1fr; gap: 40px; }
+  .steps, .prod-grid { grid-template-columns: 1fr; }
+  .step-arrow { display: none; }
+  .nav-links { display: none; }
+  .prod-head { flex-direction: column; align-items: flex-start; }
+  .stripe-inner { gap: 20px; }
+}
+</style>
+
+<!-- NAV -->
+<nav>
+  <div class="inner nav-inner">
+    <a class="logo" href="#">Dahlia<span class="logo-sub"> × Feeling</span></a>
+    <ul class="nav-links">
+      <li><a href="#">How it works</a></li>
+      <li><a href="#">Products</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">For Shops</a></li>
+    </ul>
+    <button class="nav-btn">Take the Quiz</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="inner hero-grid">
+    <div class="hero-copy">
+      <div class="hero-eyebrow">AI-powered wellness</div>
+      <h1>You know how<br>you feel.<br><em>We know what helps.</em></h1>
+      <p class="hero-desc">Describe your state of mind and our recommendation engine matches you to the right aromatherapy and wellness products — no guesswork, no scrolling.</p>
+      <div class="hero-actions">
+        <button class="btn-warm" onclick="document.getElementById('quiz-section').scrollIntoView({behavior:'smooth'})">How are you feeling?</button>
+        <a class="btn-ghost" href="#">See how it works</a>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE QUIZ WIDGET -->
+    <div class="quiz-card" id="quiz-section">
+      <!-- Step 1: Feeling -->
+      <div class="quiz-step qs-active" id="qs1">
+        <p class="quiz-q">How are you feeling right now?</p>
+        <div class="pills">
+          <button class="pill" onclick="pickFeeling(this,'Tense')">Tense</button>
+          <button class="pill" onclick="pickFeeling(this,'Drained')">Drained</button>
+          <button class="pill" onclick="pickFeeling(this,'Scattered')">Scattered</button>
+          <button class="pill" onclick="pickFeeling(this,'Just need a moment')">Just need a moment</button>
+          <button class="pill" onclick="pickFeeling(this,'Feeling good')">Feeling good</button>
+          <button class="pill" onclick="pickFeeling(this,'Energized')">Energized</button>
+        </div>
+        <p class="quiz-hint">Pick the one that fits right now.</p>
+      </div>
+
+      <!-- Step 2: Direction -->
+      <div class="quiz-step" id="qs2">
+        <div class="quiz-selected-tag" id="qs2-tag"></div>
+        <p class="quiz-q">What do you need from this?</p>
+        <div class="pills">
+          <button class="pill" onclick="pickDirection(this,'Release')">Release tension</button>
+          <button class="pill" onclick="pickDirection(this,'Lift')">Lift my mood</button>
+          <button class="pill" onclick="pickDirection(this,'Ground')">Feel grounded</button>
+          <button class="pill" onclick="pickDirection(this,'Focus')">Find focus</button>
+          <button class="pill" onclick="pickDirection(this,'Restore')">Restore energy</button>
+          <button class="pill" onclick="pickDirection(this,'Comfort')">Find comfort</button>
+        </div>
+        <button class="quiz-back" onclick="goBack(1)">← Start over</button>
+      </div>
+
+      <!-- Step 3: Results -->
+      <div class="quiz-step" id="qs3">
+        <div class="quiz-selected-tag" id="qs3-tag"></div>
+        <p class="results-label">Recommended for you</p>
+        <div class="mini-results" id="mini-results"></div>
+        <hr class="quiz-sep">
+        <button class="btn-warm" style="width:100%;margin-top:4px;border-radius:10px;" onclick="goBack(1)">See all recommendations →</button>
+        <button class="quiz-back" onclick="goBack(1)">← Try again</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIPE -->
+<div class="stripe">
+  <div class="inner stripe-inner">
+    <span class="stripe-item">🌿 &nbsp;Botanical ingredients</span>
+    <span class="stripe-item">🤖 &nbsp;AI-matched to your mood</span>
+    <span class="stripe-item">✓ &nbsp;No account required</span>
+    <span class="stripe-item">📦 &nbsp;Ships from our studio</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="inner">
+    <div class="eyebrow">The experience</div>
+    <h2 class="section-h">Three steps to the<br>right product</h2>
+    <p class="section-desc">The quiz takes under a minute. Our engine does the rest — matching your emotional state to products that actually address it.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">01</div>
+        <div class="step-icon-wrap">🌡️</div>
+        <h3>Name the feeling</h3>
+        <p>Pick from six honest emotional states — or type it in your own words. There are no wrong answers.</p>
+        <span class="step-arrow">→</span>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <div class="step-icon-wrap">🧭</div>
+        <h3>Set a direction</h3>
+        <p>Tell us what you're looking for — to release, to lift, to ground, to focus. This shapes what we recommend.</p>
+        <span class="step-arrow">→</span>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <div class="step-icon-wrap">✨</div>
+        <h3>Receive your match</h3>
+        <p>We surface the right products from our catalog, ranked by ingredient fit and emotional alignment — not popularity.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products">
+  <div class="inner">
+    <div class="prod-head">
+      <div>
+        <div class="eyebrow">Products</div>
+        <h2 class="section-h" style="margin-bottom:0">Recent top matches</h2>
+      </div>
+      <a class="see-all" href="#">View all products →</a>
+    </div>
+    <div class="prod-grid">
+      <div class="prod-card">
+        <div class="prod-thumb" style="background:#e8f4ea;">
+          🌿
+          <span class="prod-match">Top Pick</span>
+        </div>
+        <div class="prod-body">
+          <div class="prod-name">Calm &amp; Ground Roll-On</div>
+          <div class="prod-type">Topical · 10 ml</div>
+          <div class="chips">
+            <span class="chip">Grounding</span>
+            <span class="chip">Lavender</span>
+            <span class="chip">Vetiver</span>
+          </div>
+          <div class="prod-foot">
+            <span class="prod-price">$28.00</span>
+            <button class="btn-add">Add to cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-thumb" style="background:#edf5f0;">
+          🌱
+          <span class="prod-match">Great Fit</span>
+        </div>
+        <div class="prod-body">
+          <div class="prod-name">Just Peppermint</div>
+          <div class="prod-type">Fragrance · Room spray</div>
+          <div class="chips">
+            <span class="chip">Focus</span>
+            <span class="chip">Energizing</span>
+            <span class="chip">Mint</span>
+          </div>
+          <div class="prod-foot">
+            <span class="prod-price">$22.00</span>
+            <button class="btn-add">Add to cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-thumb" style="background:#ede8f4;">
+          🌙
+          <span class="prod-match">Great Fit</span>
+        </div>
+        <div class="prod-body">
+          <div class="prod-name">Nighttime Gummies</div>
+          <div class="prod-type">Supplement · 30 count</div>
+          <div class="chips">
+            <span class="chip">Sleep</span>
+            <span class="chip">Restore</span>
+            <span class="chip">CBD</span>
+          </div>
+          <div class="prod-foot">
+            <span class="prod-price">$38.00</span>
+            <button class="btn-add">Add to cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCIENCE -->
+<section class="science">
+  <div class="inner sci-grid">
+    <div class="sci-vis">
+      <div class="sci-title-vis">Ingredient match — "I feel tense"</div>
+      <div class="sci-rows">
+        <div class="sci-row"><span class="sci-lbl">Lavender</span><div class="sci-bar-track"><div class="sci-bar-fill" style="width:91%"></div></div><span class="sci-pct">91%</span></div>
+        <div class="sci-row"><span class="sci-lbl">Vetiver</span><div class="sci-bar-track"><div class="sci-bar-fill" style="width:84%"></div></div><span class="sci-pct">84%</span></div>
+        <div class="sci-row"><span class="sci-lbl">Bergamot</span><div class="sci-bar-track"><div class="sci-bar-fill" style="width:76%"></div></div><span class="sci-pct">76%</span></div>
+        <div class="sci-row"><span class="sci-lbl">Chamomile</span><div class="sci-bar-track"><div class="sci-bar-fill" style="width:68%"></div></div><span class="sci-pct">68%</span></div>
+        <div class="sci-row"><span class="sci-lbl">Frankincense</span><div class="sci-bar-track"><div class="sci-bar-fill" style="width:55%"></div></div><span class="sci-pct">55%</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow">The engine</div>
+      <h2 class="section-h">Recommendations built on ingredient science</h2>
+      <div class="sci-points">
+        <div class="sci-pt"><div class="sci-dot"></div><div><h4>Emotional state mapping</h4><p>Our AI reads your description and maps it to known emotional states — not keywords. "I can't switch off" reads as tense, not just a text match.</p></div></div>
+        <div class="sci-pt"><div class="sci-dot"></div><div><h4>Ingredient-level scoring</h4><p>Every product is enriched with its scent notes, ingredients, and emotional benefits. Scores reflect what's inside, not what the label says.</p></div></div>
+        <div class="sci-pt"><div class="sci-dot"></div><div><h4>Feedback-adjusted over time</h4><p>Each thumbs up or down tunes the model. Products that actually resonate rise; mismatches fall — regardless of price or margin.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Find what you need<br><em>in less than a minute.</em></h2>
+  <p>No account. No subscription. Just honest recommendations.</p>
+  <button class="btn-warm" onclick="document.getElementById('quiz-section').scrollIntoView({behavior:'smooth'})">Take the quiz</button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="inner">
+    <span class="foot-copy">© 2026 Dahlia Dynamics · dahlia-dynamics-dev.myshopify.com</span>
+    <div class="foot-links">
+      <a href="#">Privacy</a>
+      <a href="#">Contact</a>
+      <a href="#">For merchants</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+var feelingChoice = '';
+var directionChoice = '';
+
+var resultMap = {
+  'Tense':   ['Release','Ground','Comfort'],
+  'Drained': ['Restore','Lift','Ground'],
+  'Scattered': ['Focus','Ground','Restore'],
+  'Just need a moment': ['Comfort','Release','Ground'],
+  'Feeling good': ['Lift','Focus','Restore'],
+  'Energized': ['Focus','Lift','Release']
+};
+
+var productMap = {
+  'Release': [{icon:'🌿',bg:'#e8f4ea',name:'Calm & Ground Roll-On',type:'Topical',badge:'Top Pick'},
+              {icon:'🕯️',bg:'#f4ede8',name:'Release Candle',type:'Fragrance',badge:'Great Fit'}],
+  'Lift':    [{icon:'🌸',bg:'#f4eaf4',name:'Bloom Room Spray',type:'Fragrance',badge:'Top Pick'},
+              {icon:'🌱',bg:'#edf5f0',name:'Just Peppermint',type:'Fragrance',badge:'Great Fit'}],
+  'Ground':  [{icon:'🌿',bg:'#e8f4ea',name:'Calm & Ground Roll-On',type:'Topical',badge:'Top Pick'},
+              {icon:'🌳',bg:'#e8f0e8',name:'Forest Bath Balm',type:'Topical',badge:'Great Fit'}],
+  'Focus':   [{icon:'🌱',bg:'#edf5f0',name:'Just Peppermint',type:'Fragrance',badge:'Top Pick'},
+              {icon:'🍃',bg:'#e8f4ec',name:'Clarity Tincture',type:'Supplement',badge:'Great Fit'}],
+  'Restore': [{icon:'🌙',bg:'#ede8f4',name:'Nighttime Gummies',type:'Supplement',badge:'Top Pick'},
+              {icon:'🛁',bg:'#e8eef4',name:'Deep Rest Bath Oil',type:'Topical',badge:'Great Fit'}],
+  'Comfort': [{icon:'🍂',bg:'#f4ede8',name:'Thanksgiving Dessert',type:'Fragrance',badge:'Top Pick'},
+              {icon:'🌿',bg:'#e8f4ea',name:'Calm & Ground Roll-On',type:'Topical',badge:'Great Fit'}]
+};
+
+function showStep(n) {
+  document.querySelectorAll('.quiz-step').forEach(function(s){ s.classList.remove('qs-active'); });
+  document.getElementById('qs'+n).classList.add('qs-active');
+}
+
+function pickFeeling(btn, val) {
+  feelingChoice = val;
+  document.querySelectorAll('#qs1 .pill').forEach(function(p){ p.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('qs2-tag').textContent = val;
+  setTimeout(function(){ showStep(2); }, 260);
+}
+
+function pickDirection(btn, val) {
+  directionChoice = val;
+  document.querySelectorAll('#qs2 .pill').forEach(function(p){ p.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('qs3-tag').textContent = feelingChoice + ' → ' + val;
+  buildResults(val);
+  setTimeout(function(){ showStep(3); }, 260);
+}
+
+function buildResults(dir) {
+  var prods = productMap[dir] || productMap['Comfort'];
+  var el = document.getElementById('mini-results');
+  el.innerHTML = prods.map(function(p){
+    return '<div class="mini-card">'
+      + '<div class="mini-icon" style="background:'+p.bg+'">'+p.icon+'</div>'
+      + '<div class="mini-info"><div class="mini-name">'+p.name+'</div><div class="mini-type">'+p.type+'</div></div>'
+      + '<span class="mini-badge">'+p.badge+'</span>'
+      + '</div>';
+  }).join('');
+}
+
+function goBack(step) { showStep(step); }
+</script>

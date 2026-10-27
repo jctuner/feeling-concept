@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /feeling-app/
+
+Sitemap: https://understandingit.biz/sitemap.xml
